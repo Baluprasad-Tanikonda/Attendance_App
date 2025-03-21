@@ -1,0 +1,44 @@
+.present_day {
+  background-color: rgba(34, 197, 94, 0.2); /* Light green */
+  color: #22c55e;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 5px;
+  transition: all 0.3s ease;
+}
+
+.present_day:hover {
+  background-color: #22c55e;
+  color: white;
+  transform: scale(1.1);
+}
+
+.absent_day {
+  background-color: rgba(239, 68, 68, 0.2); /* Light red */
+  color: #ef4444;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 5px;
+  transition: all 0.3s ease;
+}
+
+.absent_day:hover {
+  background-color: #ef4444;
+  color: white;
+  transform: scale(1.1);
+}
+
+.leave_day {
+  background-color: rgba(234, 179, 8, 0.2); /* Light yellow */
+  color: #eab308;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 5px;
+  transition: all 0.3s ease;
+}
+
+.leave_day:hover {
+  background-color: #eab308;
+  color: white;
+  transform: scale(1.1);
+}
