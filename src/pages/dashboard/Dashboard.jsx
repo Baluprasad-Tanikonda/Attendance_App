@@ -1,10 +1,13 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { db, collection, addDoc } from "../../firebase";
+import { db } from "../../firebase";
+import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
+import Loader from "./../../components/Layout/Loader";
 
 const Dashboard = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [batchName, setBatchName] = useState("");
   const [batchDate, setBatchDate] = useState("");
   const [courseName, setCourseName] = useState("");
@@ -16,6 +19,13 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const courseOptions = [
     "React Development",
     "Full Stack Development",
@@ -24,51 +34,64 @@ const Dashboard = () => {
     "AWS DevOps",
   ];
 
-  // Phone number validation function
- const isValidPhoneNumber = (phone) => {
-   const phoneRegex = /^[6789]\d{9}$/;
-   return phoneRegex.test(phone);
- };
+  const isValidPhoneNumber = (phone) => /^[6789]\d{9}$/.test(phone);
 
   const handleAddStudent = () => {
-    if (studentName && studentEmail && isValidPhoneNumber(studentPhone)) {
-      setStudents([
-        ...students,
-        { name: studentName, email: studentEmail, phone: studentPhone },
-      ]);
-      setStudentName("");
-      setStudentEmail("");
-      setStudentPhone("");
-    } else {
-      window.alert("Please enter a valid phone number (10 digits).");
+    if (!studentName || !studentEmail || !isValidPhoneNumber(studentPhone)) {
+      window.alert(
+        "Please enter valid details (including a 10-digit phone number)."
+      );
+      return;
     }
+
+    const isDuplicate = students.some(
+      (student) =>
+        student.email === studentEmail || student.phone === studentPhone
+    );
+
+    if (isDuplicate) {
+      window.alert("A student with this email or phone number already exists.");
+      return;
+    }
+
+    setStudents([
+      ...students,
+      { name: studentName, email: studentEmail, phone: studentPhone },
+    ]);
+
+    setStudentName("");
+    setStudentEmail("");
+    setStudentPhone("");
   };
 
   const handleSubmitForm = async () => {
     if (batchName && batchDate && courseName && students.length > 0) {
-      const batchData = {
-        batchName,
-        batchDate,
-        courseName,
-        students,
-      };
+      const batchData = { batchName, batchDate, courseName, students };
 
       try {
         const docRef = await addDoc(collection(db, "batches"), batchData);
-        console.log("Document written with ID: ", docRef.id);
-
-        // Generate the attendance link using Firestore document ID
         const generatedLink = `/attendanceForm/${docRef.id}`;
 
-        // Update Firestore with the generated attendance link
+        await updateDoc(doc(db, "batches", docRef.id), {
+          attendanceLink: generatedLink,
+        });
+
         setAttendanceLink(generatedLink);
-        window.alert("Batch successfully created!");
+        window.alert("Batch successfully created with an attendance link!");
       } catch (error) {
         console.error("Error adding document: ", error);
         window.alert("Error adding batch. Please try again.");
       }
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-8xl mx-auto p-6 bg-white rounded-lg shadow-lg flex flex-col md:flex-row gap-6">
@@ -148,11 +171,14 @@ const Dashboard = () => {
         {attendanceLink && (
           <div className="p-4 bg-gray-100 rounded-md">
             <h4 className="text-lg font-semibold">Attendance Link</h4>
-            <p
-              className="text-blue-600 cursor-pointer hover:underline"
-              onClick={() => navigate(attendanceLink)}
-            >
-              {window.location.origin + attendanceLink}
+
+            <p>
+              <a
+                href={attendanceLink}
+                className="text-blue-600 hover:underline"
+              >
+                {window.location.origin + attendanceLink}
+              </a>
             </p>
           </div>
         )}

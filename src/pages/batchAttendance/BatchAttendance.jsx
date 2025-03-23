@@ -194,20 +194,6 @@ const BatchAttendance = () => {
           )}
         </div>
       </div>
-
-      {/* Actions */}
-      <div className="mt-6 flex gap-4">
-        <button
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-          onClick={() =>
-            navigate(`/attendanceForm/${selectedBatch.id}`, {
-              state: { students: selectedBatch.students },
-            })
-          }
-        >
-          Mark Attendance
-        </button>
-      </div>
     </div>
   );
 };

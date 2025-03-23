@@ -1,13 +1,15 @@
-  /** @format */
+/** @format */
 
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BatchAttendance from "../batchAttendance/BatchAttendance";
 import StudentAttendance from "../studentAttendance/StudentAttendance";
+import Loader from "../../components/Layout/Loader"; // Import your Loader component
 
 const AttendancePage = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("Batch Attendance");
+  const [loading, setLoading] = useState(true);
   const batch = location.state?.batch || null;
   const student = location.state?.student || null;
 
@@ -15,6 +17,14 @@ const AttendancePage = () => {
     if (location.state?.activeTab) {
       setActiveTab(location.state.activeTab);
     }
+
+    // Show loader for at least 1 second
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer); // Cleanup timeout on unmount
   }, [location.state]);
 
   return (
@@ -48,12 +58,23 @@ const AttendancePage = () => {
         </button>
       </div>
 
-      {/* Render Components */}
-      {activeTab === "Batch Attendance" && <BatchAttendance batch={batch} />}
-      {activeTab === "Student Attendance" && ( <StudentAttendance student={student} />)}
+      {/* Show Loader for 1 Second */}
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <Loader />
+        </div>
+      ) : (
+        <>
+          {activeTab === "Batch Attendance" && (
+            <BatchAttendance batch={batch} />
+          )}
+          {activeTab === "Student Attendance" && (
+            <StudentAttendance student={student} />
+          )}
+        </>
+      )}
     </div>
   );
-
 };
 
 export default AttendancePage;

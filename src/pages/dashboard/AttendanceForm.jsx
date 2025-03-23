@@ -1,10 +1,12 @@
 /** @format */
 import React, { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FirestoreContext } from "../../store/Context"; // Import context
+import { FirestoreContext } from "../../store/Context";
+import Loader from "./../../components/Layout/Loader";
 
 const AttendanceForm = () => {
   const { batchId } = useParams();
+  console.log("Batch ID:", batchId);
   const navigate = useNavigate();
   const { filteredBatches, updateStudentAttendance } =
     useContext(FirestoreContext);
@@ -42,10 +44,7 @@ const AttendanceForm = () => {
 
   const handleAttendanceChange = (id) => {
     if (submitted) return;
-    setAttendance((prev) => ({
-      ...prev,
-      [id]: prev[id] === "Present" ? "Absent" : "Present",
-    }));
+    setAttendance({ [id]: "Present" });
   };
 
   const handleSubmitAttendance = async () => {
@@ -70,24 +69,31 @@ const AttendanceForm = () => {
     }
   };
 
-  if (!batchData) return <p className="text-center mt-10">Loading...</p>;
+  if (!batchData)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader />
+      </div>
+    );
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-2">
-        Mark Attendance - Batch Name: {batchData.batchName}
+      <h1 className="text-2xl font-bold mb-2 text-center sm:text-left">
+        Mark Attendance - {batchData.batchName}
       </h1>
-      <p className="text-lg text-gray-700 mb-4">Date: {formattedDate}</p>
+      <p className="text-lg text-gray-700 mb-4 text-center sm:text-left">
+        {formattedDate}
+      </p>
 
-      <div className="bg-white p-4 rounded-lg shadow-md">
+      <div className="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="bg-gray-200">
-              <th className="p-2">#</th>
-              <th className="p-2">Name</th>
-              <th className="p-2">Email</th>
-              <th className="p-2">Phone</th>
-              <th className="p-2">Present</th>
+              <th className="p-2 text-left hidden sm:table-cell">#</th>
+              <th className="p-2 text-left">Name</th>
+              <th className="p-2 text-left hidden sm:table-cell">Email</th>
+              <th className="p-2 text-left hidden sm:table-cell">Phone</th>
+              <th className="p-2 text-center">Present</th>
             </tr>
           </thead>
           <tbody>
@@ -96,13 +102,16 @@ const AttendanceForm = () => {
                 student.phone || student.email.replace(/\W/g, "_");
               return (
                 <tr key={studentId} className="border-b">
-                  <td className="p-2">{index + 1}</td>
+                  <td className="p-2 hidden sm:table-cell">{index + 1}</td>
                   <td className="p-2">{student.name}</td>
-                  <td className="p-2">{student.email}</td>
-                  <td className="p-2">{student.phone || "N/A"}</td>
+                  <td className="p-2 hidden sm:table-cell">{student.email}</td>
+                  <td className="p-2 hidden sm:table-cell">
+                    {student.phone || "N/A"}
+                  </td>
                   <td className="p-2 text-center">
                     <input
                       type="checkbox"
+                      className="h-5 w-5"
                       checked={attendance[studentId] === "Present"}
                       onChange={() => handleAttendanceChange(studentId)}
                       disabled={submitted}
@@ -115,16 +124,16 @@ const AttendanceForm = () => {
         </table>
       </div>
 
-      <div className="mt-4 flex gap-4">
+      <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center sm:justify-start">
         <button
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:bg-gray-400"
           onClick={handleSubmitAttendance}
           disabled={submitted}
         >
           Submit Attendance
         </button>
         <button
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
           onClick={() => navigate(-1)}
         >
           Cancel
