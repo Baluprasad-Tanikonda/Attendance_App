@@ -46,7 +46,7 @@ const TotalBatches = () => {
             onClick={() => navigate("/dashboard")}
           >
             <Plus size={18} />
-            <span className="hidden sm:inline">New Batch</span>
+            <span className="sm:inline">New Batch</span>
           </button>
         </div>
 

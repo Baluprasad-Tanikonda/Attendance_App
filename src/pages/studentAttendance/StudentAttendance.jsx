@@ -132,17 +132,16 @@ const StudentAttendance = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="bg-gray-100 min-h-screen">
       {/* Student Information */}
       <div className="bg-gray-100 text-center">
         <h1 className="text-2xl font-bold mb-4">Select a Student</h1>
         <p className="text-gray-600 mb-6">
           First, select a course to see the available batches.
         </p>
-
         <div className="flex flex-wrap justify-center gap-4 mb-6">
           <select
-            className="p-2 border rounded-md w-60"
+            className="p-2 border rounded-md w-full sm:w-60"
             value={filterCourse}
             onChange={(e) => {
               setFilterCourse(e.target.value);
@@ -160,7 +159,7 @@ const StudentAttendance = () => {
           </select>
 
           {/* Batch Selection */}
-          <div className="relative w-64" ref={batchDropdownRef}>
+          <div className="relative w-full sm:w-64" ref={batchDropdownRef}>
             <button
               onClick={toggleBatchDropdown}
               className="w-full flex items-center justify-between bg-white border border-gray-300 rounded-md px-4 py-2 text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -168,7 +167,7 @@ const StudentAttendance = () => {
               <span>{selectedBatch || "Select Batch"}</span>
             </button>
             {isBatchDropdownOpen && (
-              <div className="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10">
+              <div className="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
                 <div className="p-2">
                   <input
                     type="text"
@@ -201,7 +200,7 @@ const StudentAttendance = () => {
           </div>
 
           {/* Student Selection */}
-          <div className="relative w-64" ref={studentDropdownRef}>
+          <div className="relative w-full sm:w-64" ref={studentDropdownRef}>
             <button
               onClick={toggleStudentDropdown}
               className="w-full flex items-center justify-between bg-white border border-gray-300 rounded-md px-4 py-2 text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -212,7 +211,7 @@ const StudentAttendance = () => {
               </span>
             </button>
             {isStudentDropdownOpen && (
-              <div className="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10">
+              <div className="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
                 <div className="p-2">
                   <input
                     type="text"
@@ -264,7 +263,7 @@ const StudentAttendance = () => {
           </div>
 
           {/* Attendance Statistics */}
-          <div className="grid grid-cols-4 gap-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div className="p-4 bg-white rounded-md shadow-md">
               <p className="text-gray-600">Total Classes</p>
               <h2 className="text-xl font-bold">{totalClasses}</h2>
@@ -297,7 +296,7 @@ const StudentAttendance = () => {
                 <h3 className="text-xl font-semibold text-center text-gray-800 mb-6">
                   Attendance Overview
                 </h3>
-                <div className="grid grid-cols-2 gap-6 items-center flex-grow">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center flex-grow">
                   {/* Attendance Chart */}
                   <div className="relative flex items-center justify-center">
                     <div className="w-36 h-36 rounded-full border-8 border-green-500 flex items-center justify-center">
@@ -340,7 +339,7 @@ const StudentAttendance = () => {
               </div>
 
               {/* Attendance Calendar */}
-              <div className="flex-1 p-6 bg-white rounded-lg shadow-md flex flex-col items-center h-full">
+              <div className="flex-1 bg-white rounded-lg shadow-md flex flex-col items-center h-full">
                 <h3 className="text-xl font-semibold text-center text-gray-800 mb-6">
                   Attendance Calendar
                 </h3>

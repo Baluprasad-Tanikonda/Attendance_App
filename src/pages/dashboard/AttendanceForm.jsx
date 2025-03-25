@@ -132,12 +132,12 @@ const AttendanceForm = () => {
         >
           Submit Attendance
         </button>
-        <button
+        {/* <button
           className="px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
           onClick={() => navigate(-1)}
         >
           Cancel
-        </button>
+        </button> */}
       </div>
     </div>
   );
